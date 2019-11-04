@@ -10,7 +10,7 @@ const Sider = Layout.Sider
 
 import "./layout.less"
 
-const CustomLayout = ({ children }) => (
+const CustomLayout = props => (
     <Layout className="mainLayout">
     <Sider
       breakpoint="lg"
@@ -54,7 +54,7 @@ const CustomLayout = ({ children }) => (
       <Header style={{ background: '#fff', padding: 0 }} />
       <Content style={{ margin: '24px 16px 0' }}>
         <div style={{ padding: 24, background: '#fff', minHeight: "98%" }}>
-            {children}
+            {props.children}
         </div>
       </Content>
       <Footer style={{ textAlign: 'center' }}>Projet universitaire M2 Informatique ©2019 Créé par Guillaume NEDELEC</Footer>

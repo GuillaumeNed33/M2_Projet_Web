@@ -14,10 +14,14 @@ class MyApp extends App {
   //
   //   return { ...appProps }
   // }
-
+  
   render() {
     const { Component, pageProps } = this.props
-    return <CustomLayout><Component {...pageProps} /></CustomLayout>
+    return (
+      <CustomLayout>
+        <Component {...pageProps} />
+      </CustomLayout>
+    )
   }
 }
 
