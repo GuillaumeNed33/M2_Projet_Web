@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const Movie = require('./movie');
 const Schema = mongoose.Schema;
 
 // create ninja Schema & model
@@ -25,9 +24,10 @@ const UserSchema = new Schema({
     required: [true, 'Password field is required']
   },
   movies: {
-    type: Array,
+    type: [{ type: Schema.Types.ObjectId, ref: 'movie' }],
     default: []
   }
+  //TODO set many to many relation
 });
 
 const User = mongoose.model('user', UserSchema);
