@@ -1,3 +1,4 @@
+const jwt = require("jsonwebtoken");
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
@@ -20,15 +21,19 @@ const UserSchema = new Schema({
   },
   password: {
     type: String,
-    minlength: 6,
+    minlength: 3,
     required: [true, 'Password field is required']
   },
   movies: {
     type: [{ type: Schema.Types.ObjectId, ref: 'movie' }],
     default: []
   }
-  //TODO set many to many relation
 });
+
+//custom method to generate authToken
+UserSchema.methods.generateAuthToken = function() {
+  return jwt.sign({ _id: this._id, isAdmin: this.isAdmin }, process.env.JWT_PRIVATE, { algorithm: 'RS256', expiresIn: '1h' });
+};
 
 const User = mongoose.model('user', UserSchema);
 

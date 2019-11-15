@@ -10,7 +10,7 @@ dotenv.config();
 const app = express();
 
 // connect to mongodb
-mongoose.connect("mongodb://127.0.0.1:27017/M2WEB", { useUnifiedTopology: true, useNewUrlParser: true });
+mongoose.connect("mongodb://127.0.0.1:27017/M2WEB", { useUnifiedTopology: true, useNewUrlParser: true, useCreateIndex: true });
 
 // use body-parser middleware
 app.use(bodyParser.json());

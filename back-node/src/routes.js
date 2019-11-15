@@ -1,4 +1,5 @@
-const express = require ('express');
+const express = require('express');
+const auth = require('./auth');
 const router = express.Router();
 
 const movieController = require('./controllers/movie.controller');
@@ -9,11 +10,11 @@ router.post('/register', userController.register);
 router.post('/login', userController.login);
 
 /** Movies Routes **/
-router.get('/movies', movieController.getMoviesForAuthUser);
-router.get('/movie/:id', movieController.getMovieById);
-router.post('/movie', movieController.addMovie);
-router.put('/movie/:id', movieController.updateMovie);
-router.delete('/movie/:id', movieController.removeMovie);
-router.post('/explorer', movieController.addMovieFromExplorer);
+router.get('/movies', auth, movieController.getMoviesForAuthUser);
+router.get('/movie/:id', auth, movieController.getMovieById);
+router.post('/movie', auth, movieController.addMovie);
+router.put('/movie/:id', auth, movieController.updateMovie);
+router.delete('/movie/:id', auth, movieController.removeMovie);
+router.post('/explorer', auth, movieController.addMovieFromExplorer);
 
 module.exports = router;

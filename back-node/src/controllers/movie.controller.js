@@ -2,8 +2,9 @@ const Movie = require('../models/movie');
 const User = require('../models/user');
 
 exports.getMoviesForAuthUser = (req, res, next) => {
-  Movie.find({}).then(function(movie){
-    res.send(movie);
+  User.find({_id: req.user._id}).populate('movies')
+      .then(function(user){
+    res.send(user);
   });
 }
 
@@ -14,7 +15,8 @@ exports.getMovieById = (req, res, next) => {
 }
 
 exports.addMovie = (req, res, next) => {
-  Movie.create(req.body).then(function(movie){
+  Movie.create(req.body).then(async function(movie){
+    await addMovieToUserList(req.user, movie);
     res.send(movie);
   }).catch(next);
 }
@@ -37,3 +39,12 @@ exports.removeMovie = (req, res, next) => {
     res.send(movie);
   }).catch(next);
 }
+
+addMovieToUserList = async (user, movie) => {
+  User.findOne({_id: user._id}).then(async user => {
+    user.movies.push(movie);
+    await user.save();
+  }).catch(e => {
+    console.error(e);
+  })
+};
