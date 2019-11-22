@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+const cors = require('cors')
 
 //get env variables from .env file
 dotenv.config();
@@ -14,6 +15,9 @@ mongoose.connect("mongodb://127.0.0.1:27017/M2WEB", { useUnifiedTopology: true, 
 
 // use body-parser middleware
 app.use(bodyParser.json());
+
+// enable cors
+app.use(cors())
 
 // initialize routes
 app.use('/', require('./src/routes'));
