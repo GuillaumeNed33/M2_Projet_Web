@@ -1,28 +1,30 @@
 import React from 'react'
+import {withAuthSync} from "../utils/auth";
+import CustomLayout from "../components/layout";
 import MovieFormAntd from '../components/movie-form'
 
-class AddMovie extends React.Component {
+class AddMoviePage extends React.Component {
 
     constructor(props) {
         super(props)
-      console.log("constructor")
+        console.log("constructor")
     }
 
     componentDidMount() {
-      console.log("mount")
+        console.log("mount")
 
     }
 
     render() {
-      console.log("render")
-      return (
-          <div>
-              <h1 style={{fontSize: 28 }}>Ajouter un film</h1>
-              <hr style={{marginBottom: 25 }}/>
-              <MovieFormAntd/>
-          </div>
+        console.log("render")
+        return (
+            <CustomLayout tab={"add"}>
+                <h1 style={{fontSize: 28 }}>Ajouter un film</h1>
+                <hr style={{marginBottom: 25 }}/>
+                <MovieFormAntd/>
+            </CustomLayout>
         );
     }
 }
 
-export default AddMovie
+export default withAuthSync(AddMoviePage)

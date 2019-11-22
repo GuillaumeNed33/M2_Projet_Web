@@ -1,27 +1,23 @@
 import React from 'react'
-import Link from 'next/link'
+import { withAuthSync } from '../utils/auth'
+import CustomLayout from "../components/layout";
 import MovieFormAntd from '../components/movie-form'
 
-class UpdateMovie extends React.Component {
-  
-  constructor(props) {
-    super(props)
-  }
-  
-  componentDidMount() {
-  
-  }
-  
-  render() {
-    return (
-      <div>
-        <h1 style={{fontSize: 28 }}>Modification d'un film</h1>
-        <hr style={{marginBottom: 25 }}/>
-        <MovieFormAntd/>
-        <div></div>
-      </div>
-    );
-  }
+class UpdateMoviePage extends React.Component {
+
+    constructor(props) {
+        super(props)
+    }
+
+    render() {
+        return (
+            <CustomLayout tab={"update"}>
+                <h1 style={{fontSize: 28 }}>Modification d'un film</h1>
+                <hr style={{marginBottom: 25 }}/>
+                <MovieFormAntd/>
+            </CustomLayout>
+        );
+    }
 }
 
-export default UpdateMovie
+export default withAuthSync(UpdateMoviePage)
