@@ -23,7 +23,7 @@ exports.register = async (req, res, next) => {
       token: token
     });
   } catch (e) {
-    res.status(400).send(e.errMsg)
+    res.status(400).send(e.errmsg)
   }
 };
 

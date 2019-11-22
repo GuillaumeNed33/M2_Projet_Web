@@ -77,7 +77,7 @@ class NormalLoginForm extends React.Component {
                     )}
                 </Form.Item>
                 <Form.Item>
-                    <Button type="primary" htmlType="submit" loading={this.state.loading} className="login-form-button">
+                    <Button type="primary" htmlType="submit" loading={this.state.loading} className="form-button">
                         Connexion
                     </Button>
                     ou <Link href="/register"><a href="#">s'inscrire maintenant!</a></Link>
