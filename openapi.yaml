@@ -1,0 +1,293 @@
+openapi: 3.0.1
+info:
+  title: Movie app
+  version: 1.0.0
+  contact:
+    name: Guillaume NEDELEC
+    email: guillaume.nedelec@etu.u-bordeaux.fr
+
+  description: >-
+    Application de recensement de films. Ajout manuel ou extraction des données
+    de OMDB API.
+servers:
+  - url: 'https://localhost:3000'
+paths:
+  '/register':
+    post:
+      description: Create new user
+      operationId: register
+      requestBody:
+        description: User infos required to be saved in database
+        content:
+          application/json:
+            schema:
+              properties:
+                first_name:
+                  description: User's first name
+                  type: string
+                last_name:
+                  description: User's first name
+                  type: string
+                username:
+                  description: User's username
+                  type: string
+                password:
+                  description: User's password
+                  type: string
+        required: true
+      responses:
+        '400':
+          description: Invalid input
+          content: {}
+        '201':
+          description: New user created and auth token
+          content:
+            application/json:
+              schema:
+                properties:
+                  user:
+                    $ref: '#/components/schemas/User'
+                  token:
+                    description: authentication token
+                    type: string
+      security: []
+  '/login':
+    post:
+      description: Login user into the app
+      operationId: login
+      requestBody:
+        description: Username and password of the user
+        content:
+          application/json:
+            schema:
+              properties:
+                username:
+                  description: User's username
+                  type: string
+                password:
+                  description: User's password
+                  type: string
+        required: true
+      responses:
+        '400':
+          description: Invalid credentials
+          content: {}
+        '200':
+          description: Authenticated user and auth token
+          content:
+            application/json:
+              schema:
+                properties:
+                  user:
+                    $ref: '#/components/schemas/User'
+                  token:
+                    description: authentication token
+                    type: string
+      security: []
+  '/movies':
+    get:
+      description: Get all movies linked to the authenticated user
+      operationId: getMoviesForAuthUser
+      responses:
+        '422':
+          description: MongoDB excepttion
+          content: {}
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '200':
+          description: List of movies
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Movie'
+      security:
+        - basicAuth: []
+  '/movie':
+    post:
+      description: Create new movie and link it to the auth user
+      operationId: addMovie
+      requestBody:
+        description: Movie infos required to be saved in database
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Movie'
+        required: true
+      responses:
+        '422':
+          description: MongoDB excepttion
+          content: {}
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '201':
+          description: New movie created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movie'
+      security:
+        - basicAuth: []
+  '/movie/{id}':
+    get:
+      description: Get movie by id
+      operationId: getMovieById
+      parameters:
+        - name: id
+          in: path
+          description: ID of movie
+          required: true
+          schema:
+            type: string
+      responses:
+        '422':
+          description: MongoDB excepttion
+          content: {}
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '200':
+          description: Targeted movie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movie'
+      security:
+        - basicAuth: []
+    put:
+      description: Update movie
+      operationId: updateMovie
+      parameters:
+        - name: id
+          in: path
+          description: ID of movie to update
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Movie infos required to be saved in database
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Movie'
+        required: true
+      responses:
+        '422':
+          description: MongoDB excepttion
+          content: {}
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '200':
+          description: Updated movie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movie'
+      security:
+        - basicAuth: []
+    delete:
+      description: Delete movie
+      operationId: removeMovie
+      parameters:
+        - name: id
+          in: path
+          description: ID of movie to delete
+          required: true
+          schema:
+            type: string
+      responses:
+        '422':
+          description: MongoDB excepttion
+          content: {}
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '200':
+          description: Deleted movie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movie'
+      security:
+        - basicAuth: []
+  '/explorer':
+    post:
+      description: Get movies from OMDB API
+      operationId: getFromOMDB
+      requestBody:
+        description: Search input
+        content:
+          application/json:
+            schema:
+              properties:
+                search:
+                  type: string
+        required: true
+      responses:
+        '422':
+          description: OMDB API error
+          content: {}
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '200':
+          description: OMDB's movies matching with the search parameter
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Movie'
+      security:
+        - basicAuth: []
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+        movies:
+          type: array
+          items:
+            $ref: '#/components/schemas/Movie'
+    Movie:
+      type: object
+      properties:
+        _id:
+          type: string
+        title:
+          type: string
+        release_date:
+          type: string
+        directors:
+          type: array
+          items:
+            type: string
+        plot:
+          type: string
+        poster:
+          type: string
+          description: poster url
+        genres:
+          type: array
+          items:
+            type: string
+        runtime:
+          type: integer
+          description: durée en minutes
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+  responses:
+    UnauthorizedError:
+      description: Access token is missing or invalid
+security:
+  - basicAuth: []

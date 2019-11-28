@@ -17,7 +17,7 @@ exports.getMovieById = (req, res, next) => {
 exports.addMovie = (req, res, next) => {
   Movie.create(req.body).then(async function(movie){
     await addMovieToUserList(req.user, movie);
-    res.send(movie);
+    res.status(201).send(movie);
   }).catch(next);
 }
 

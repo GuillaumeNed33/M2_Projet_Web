@@ -13,7 +13,7 @@ exports.register = async (req, res, next) => {
     await user.save();
 
     const token = user.generateAuthToken();
-    res.header("Authorizarion", token).send({
+    res.header("Authorizarion", token).status(201).send({
       user: {
         _id: user._id,
         first_name: user.first_name,
