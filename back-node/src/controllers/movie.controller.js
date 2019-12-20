@@ -21,9 +21,9 @@ exports.addMovie = (req, res, next) => {
   }).catch(next);
 }
 
-exports.addMovieFromExplorer = (req, res, next) => {
-  //TODO: ajouter le film dans la BD
-  //TODO: ajouter une relation entre le film et l'utilisateur connecté
+exports.getMovieFromExplorer = (req, res, next) => {
+  const inputSearch = req.params.searchInput;
+  //TODO: call API and format response
 }
 
 exports.updateMovie = (req, res, next) => {

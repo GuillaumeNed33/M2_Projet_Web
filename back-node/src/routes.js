@@ -15,6 +15,6 @@ router.get('/movie/:id', auth, movieController.getMovieById);
 router.post('/movie', auth, movieController.addMovie);
 router.put('/movie/:id', auth, movieController.updateMovie);
 router.delete('/movie/:id', auth, movieController.removeMovie);
-router.post('/explorer', auth, movieController.addMovieFromExplorer);
+router.get('/explorer/:searchInput', auth, movieController.getMovieFromExplorer);
 
 module.exports = router;

@@ -209,19 +209,17 @@ paths:
                 $ref: '#/components/schemas/Movie'
       security:
         - basicAuth: []
-  '/explorer':
-    post:
+  '/explorer/{searchInput}':
+    get:
       description: Get movies from OMDB API
       operationId: getFromOMDB
-      requestBody:
-        description: Search input
-        content:
-          application/json:
-            schema:
-              properties:
-                search:
-                  type: string
-        required: true
+      parameters:
+        - name: searchInput
+          in: path
+          description: Search input
+          required: true
+          schema:
+            type: string
       responses:
         '422':
           description: OMDB API error
