@@ -10,8 +10,9 @@ dotenv.config();
 // set up express app
 const app = express();
 
+
 // connect to mongodb
-mongoose.connect("mongodb://127.0.0.1:27017/M2WEB", { useUnifiedTopology: true, useNewUrlParser: true, useCreateIndex: true });
+mongoose.connect(process.env.DB_URL, { useUnifiedTopology: true, useNewUrlParser: true, useCreateIndex: true });
 
 // use body-parser middleware
 app.use(bodyParser.json());
@@ -29,8 +30,8 @@ app.use(function(err, req, res, next){
 });
 
 // start server
-app.listen(process.env.APP_PORT || 4000, function(){
-  console.log(`now listening for requests on  http://127.0.0.1:${process.env.APP_PORT}`);
+app.listen(4000, function(){
+  console.log(`now listening for requests on  http://127.0.0.1:4000`);
 });
 
 
