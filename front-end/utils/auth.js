@@ -9,6 +9,14 @@ export const login = ({ user, token }) => {
     Router.push('/movies')
 }
 
+export const getAuthToken =() => {
+    return cookie.get('token');
+}
+
+export const getAuthUser =() => {
+    return cookie.get('user');
+}
+
 export const auth = ctx => {
     const { token } = nextCookie(ctx)
 

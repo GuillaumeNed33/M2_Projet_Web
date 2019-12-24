@@ -4,8 +4,8 @@ const User = require('../models/user');
 exports.getMoviesForAuthUser = (req, res, next) => {
   User.find({_id: req.user._id}).populate('movies')
       .then(function(user){
-    res.send(user);
-  });
+        res.send(user[0].movies);
+      });
 }
 
 exports.getMovieById = (req, res, next) => {
