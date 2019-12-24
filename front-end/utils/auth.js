@@ -19,7 +19,6 @@ export const getAuthUser =() => {
 
 export const auth = ctx => {
     const { token } = nextCookie(ctx)
-
     // If there's no token, it means the user is not logged in.
     if (!token) {
         if (typeof window === 'undefined') {
@@ -29,7 +28,6 @@ export const auth = ctx => {
             Router.push('/login')
         }
     }
-
     return token
 }
 
@@ -48,28 +46,23 @@ export const withAuthSync = WrappedComponent => {
                 Router.push('/login')
             }
         }
-
         useEffect(() => {
             window.addEventListener('storage', syncLogout)
-
+            
             return () => {
                 window.removeEventListener('storage', syncLogout)
                 window.localStorage.removeItem('logout')
             }
         }, [])
-
         return <WrappedComponent {...props} />
     }
-
+    
     Wrapper.getInitialProps = async ctx => {
         const token = auth(ctx)
-
         const componentProps =
             WrappedComponent.getInitialProps &&
             (await WrappedComponent.getInitialProps(ctx))
-
         return { ...componentProps, token }
     }
-
     return Wrapper
 }

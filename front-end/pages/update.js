@@ -4,11 +4,11 @@ import CustomLayout from "../components/layout";
 import MovieFormAntd from '../components/movie-form'
 
 class UpdateMoviePage extends React.Component {
-
+    
     constructor(props) {
         super(props)
     }
-
+    
     render() {
         return (
             <CustomLayout tab={"update"}>

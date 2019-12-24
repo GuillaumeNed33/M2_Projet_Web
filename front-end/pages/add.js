@@ -4,17 +4,16 @@ import CustomLayout from "../components/layout";
 import MovieFormAntd from '../components/movie-form'
 
 class AddMoviePage extends React.Component {
-
+    
     constructor(props) {
         super(props)
         console.log("constructor")
     }
-
+    
     componentDidMount() {
         console.log("mount")
-
     }
-
+    
     render() {
         console.log("render")
         return (

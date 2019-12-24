@@ -7,7 +7,7 @@ require('dotenv').config()
 
 // Where your antd-custom.less file lives
 const themeVariables = lessToJS(
-  fs.readFileSync(path.resolve(__dirname, './assets/antd-custom.less'), 'utf8')
+    fs.readFileSync(path.resolve(__dirname, './assets/antd-custom.less'), 'utf8')
 )
 
 module.exports = withLess({
@@ -34,7 +34,7 @@ module.exports = withLess({
         },
         ...(typeof origExternals[0] === 'function' ? [] : origExternals),
       ]
-
+      
       config.module.rules.unshift({
         test: antStyles,
         use: 'null-loader',

@@ -6,46 +6,47 @@ import MovieCard from '../components/movie-card'
 import { message } from 'antd'
 
 class MyMoviesPage extends React.Component {
-
-  constructor(props) {
-      super(props)
-      this.state = {
-          movies: []
-      }
-  }
-
-  componentDidMount() {
-      const token = getAuthToken();
-      axios.get(process.env.API_URL + '/movies',
-          { headers: {"Authorization" : token} })
-          .then(async response => {
-              console.log(response)
-              this.setState({
-                  movies: response.data
-              })
-          })
-          .catch(error => {
-              console.log(error);
-              message.error("Une erreur s'est produite pendant le chargement de votre liste de film.")
-          });
-  }
+    
+    constructor(props) {
+        super(props)
+        this.state = {
+            movies: []
+        }
+    }
+    
+    componentDidMount() {
+        console.log("MOUNT")
+        const token = getAuthToken();
+        axios.get(process.env.API_URL + '/movies',
+            { headers: {"Authorization" : token} })
+            .then(async response => {
+                console.log(response)
+                this.setState({
+                    movies: response.data
+                })
+            })
+            .catch(error => {
+                console.log(error);
+                message.error("Une erreur s'est produite pendant le chargement de votre liste de film.")
+            })
+    }
     
     render() {
-    const {movies} = this.state;
-    return (
-        <CustomLayout tab={"movies"}>
-          <h1 style={{fontSize: 28 }}>Ma liste de film</h1>
-          <hr style={{marginBottom: 25 }}/>
-          {movies.length > 0 ? (
-              <div className="card-grid">
-                { movies.map(m => (
-                    <MovieCard key={movies.indexOf(m)} movie={m}/>
-                ))}
-              </div>
-          ) : (
-              <p style={{ fontSize: 18 }}>Votre liste de films est vide.</p>
-          )}
-          <style jsx>{`
+        const {movies} = this.state;
+        return (
+            <CustomLayout tab={"movies"}>
+                <h1 style={{fontSize: 28 }}>Ma liste de film</h1>
+                <hr style={{marginBottom: 25 }}/>
+                {movies.length > 0 ? (
+                    <div className="card-grid">
+                        { movies.map(m => (
+                            <MovieCard key={movies.indexOf(m)} movie={m}/>
+                        ))}
+                    </div>
+                ) : (
+                    <p style={{ fontSize: 18 }}>Votre liste de films est vide.</p>
+                )}
+                <style jsx>{`
             .card-grid {
               display: flex;
               flex-direction: row;
@@ -54,10 +55,9 @@ class MyMoviesPage extends React.Component {
               align-items: baseline;
             }
         `}</style>
-        </CustomLayout>
-
-    )
-  }
+            </CustomLayout>
+        )
+    }
 }
 
 export default withAuthSync(MyMoviesPage)

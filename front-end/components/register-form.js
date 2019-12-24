@@ -19,7 +19,7 @@ import axios from "axios";
 import {login} from "../utils/auth";
 
 class RegistrationForm extends React.Component {
-
+  
   constructor(props) {
     super(props)
     this.state = {
@@ -29,7 +29,7 @@ class RegistrationForm extends React.Component {
       errorMsg: ""
     }
   }
-
+  
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll(async (err, values) => {
@@ -43,7 +43,7 @@ class RegistrationForm extends React.Component {
       }
     });
   };
-
+  
   registerUser = async (first, last, username, pwd) => {
     axios.post(process.env.API_URL + '/register',
         {
@@ -66,12 +66,12 @@ class RegistrationForm extends React.Component {
           })
         });
   }
-
+  
   handleConfirmBlur = e => {
     const { value } = e.target;
     this.setState({ confirmDirty: this.state.confirmDirty || !!value });
   };
-
+  
   compareToFirstPassword = (rule, value, callback) => {
     const { form } = this.props;
     if (value && value !== form.getFieldValue('password')) {
@@ -80,7 +80,7 @@ class RegistrationForm extends React.Component {
       callback();
     }
   };
-
+  
   validateToNextPassword = (rule, value, callback) => {
     const { form } = this.props;
     if (value && this.state.confirmDirty) {
@@ -88,8 +88,8 @@ class RegistrationForm extends React.Component {
     }
     callback();
   };
-
-
+  
+  
   render() {
     const { getFieldDecorator } = this.props.form;
     const formItemLayout = {
@@ -102,7 +102,7 @@ class RegistrationForm extends React.Component {
         sm: { span: 16 },
       },
     };
-
+    
     return (
         <Form {...formItemLayout} onSubmit={this.handleSubmit} className={"register-form"}>
           <Form.Item label="Prénom" hasFeedback>

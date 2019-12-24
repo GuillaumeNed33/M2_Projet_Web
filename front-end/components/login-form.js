@@ -15,7 +15,7 @@ class NormalLoginForm extends React.Component {
             error: false,
         }
     }
-
+    
     handleSubmit = e => {
         e.preventDefault();
         this.props.form.validateFields(async (err, values) => {
@@ -28,7 +28,7 @@ class NormalLoginForm extends React.Component {
             }
         });
     };
-
+    
     authUser = async (username, pwd) => {
         axios.post(process.env.API_URL + '/login',
             {
@@ -48,7 +48,7 @@ class NormalLoginForm extends React.Component {
                 })
             });
     }
-
+    
     render() {
         const { getFieldDecorator } = this.props.form;
         return (

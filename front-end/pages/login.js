@@ -3,11 +3,11 @@ import LandingLayout from "../components/landing-layout";
 import LoginForm from "../components/login-form"
 
 class LoginPage extends React.Component {
-
+    
     constructor(props) {
         super(props)
     }
-
+    
     render() {
         return (
             <LandingLayout>
