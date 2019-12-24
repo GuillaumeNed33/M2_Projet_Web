@@ -1,22 +1,18 @@
 import React from 'react'
+import axios from "axios";
+import {login} from "../utils/auth";
+
 import {
   Form,
   Input,
   Tooltip,
   Icon,
-  Cascader,
-  Select,
-  Row,
-  Col,
-  Checkbox,
   Button,
-  AutoComplete, Alert,
+  Alert,
 } from 'antd'
 import Link from "next/link";
 
 import '../assets/login-form.less'
-import axios from "axios";
-import {login} from "../utils/auth";
 
 class RegistrationForm extends React.Component {
   
@@ -75,7 +71,7 @@ class RegistrationForm extends React.Component {
   compareToFirstPassword = (rule, value, callback) => {
     const { form } = this.props;
     if (value && value !== form.getFieldValue('password')) {
-      callback('Les deux mots de passe sont différents');
+      callback('The two passwords are different!');
     } else {
       callback();
     }
@@ -105,47 +101,47 @@ class RegistrationForm extends React.Component {
     
     return (
         <Form {...formItemLayout} onSubmit={this.handleSubmit} className={"register-form"}>
-          <Form.Item label="Prénom" hasFeedback>
+          <Form.Item label="First name" hasFeedback>
             {getFieldDecorator('first_name', {
               rules: [
                 {
                   required: true,
-                  message: 'Entrez votre prénom!',
+                  message: 'Enter your first name!',
                 },
               ],
             })(<Input />)}
           </Form.Item>
-          <Form.Item label="Nom" hasFeedback>
+          <Form.Item label="Last name" hasFeedback>
             {getFieldDecorator('last_name', {
               rules: [
                 {
                   required: true,
-                  message: 'Entrez votre nom!',
+                  message: 'Enter your last name!',
                 }
               ],
             })(<Input />)}
           </Form.Item>
-          <Form.Item label="Nom d'utilisateur" hasFeedback>
+          <Form.Item label="Username" hasFeedback>
             {getFieldDecorator('username', {
               rules: [
                 {
                   required: true,
-                  message: 'Entrez un nom d\'utilisateur!',
+                  message: 'Enter your username!',
                   whitespace: false
                 }
               ],
             })(<Input />)}
           </Form.Item>
-          <Form.Item label="Mot de passe" hasFeedback>
+          <Form.Item label="Password" hasFeedback>
             {getFieldDecorator('password', {
               rules: [
                 {
                   required: true,
-                  message: 'Entrez un mot de passe!',
+                  message: 'Enter your password!',
                 },
                 {
                   min: 5,
-                  message: 'Longueur minimum : 5 caractères!',
+                  message: 'Minimum Length: 5 characters!',
                 },
                 {
                   validator: this.validateToNextPassword,
@@ -156,7 +152,7 @@ class RegistrationForm extends React.Component {
           <Form.Item label={
             <span>
               Confirmation&nbsp;
-              <Tooltip title="Même mot de passe que précédemment">
+              <Tooltip title="Same password as before">
                 <Icon type="question-circle-o" />
               </Tooltip>
             </span>
@@ -166,7 +162,7 @@ class RegistrationForm extends React.Component {
               rules: [
                 {
                   required: true,
-                  message: 'Entrez un mot de passe  identique au précédent!',
+                  message: 'Enter a password identical to the previous one!',
                 },
                 {
                   validator: this.compareToFirstPassword,
@@ -176,9 +172,9 @@ class RegistrationForm extends React.Component {
           </Form.Item>
           <Form.Item className={"confirm-form"}>
             <Button type="primary" htmlType="submit" loading={this.state.loading} className="form-button">
-              Inscription
+              Registration
             </Button>
-            ou <Link href="/login"><a href="#">Déjà inscrit ? Connectez-vous !</a></Link>
+            or <Link href="/login"><a href="#">Already registered? Login here!</a></Link>
           </Form.Item>
           {this.state.error &&
           <Alert message={this.state.errorMsg} type="error" showIcon/>

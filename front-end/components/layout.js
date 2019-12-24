@@ -1,6 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
-
+import {logout} from '../utils/auth'
 import { Layout, Menu, Icon } from 'antd'
 const Header = Layout.Header
 const Content = Layout.Content
@@ -21,7 +21,7 @@ const CustomLayout = props => (
             <Link href="/movies">
               <div>
                 <Icon type="video-camera" />
-                <span className="nav-text">Mes films</span>
+                <span className="nav-text">My movies</span>
               </div>
             </Link>
           </Menu.Item>
@@ -29,7 +29,7 @@ const CustomLayout = props => (
             <Link href="/add">
               <div>
                 <Icon type="plus-circle" />
-                <span className="nav-text">Ajouter un film</span>
+                <span className="nav-text">Add a movie</span>
               </div>
             </Link>
           </Menu.Item>
@@ -37,7 +37,15 @@ const CustomLayout = props => (
             <Link href="/explore">
               <div>
                 <Icon type="compass" />
-                <span className="nav-text">Explorer</span>
+                <span className="nav-text">Explore movies</span>
+              </div>
+            </Link>
+          </Menu.Item>
+          <Menu.Item key="logout" onClick={logout}>
+            <Link href="#">
+              <div>
+                <Icon type="logout" />
+                <span className="nav-text">Sign out</span>
               </div>
             </Link>
           </Menu.Item>
@@ -50,7 +58,7 @@ const CustomLayout = props => (
             {props.children}
           </div>
         </Content>
-        <Footer style={{ textAlign: 'center' }}>Projet universitaire M2 Informatique ©2019 Créé par Guillaume NEDELEC</Footer>
+        <Footer style={{ textAlign: 'center' }}>University project ©2019 Created by Guillaume NEDELEC</Footer>
       </Layout>
     </Layout>
 )

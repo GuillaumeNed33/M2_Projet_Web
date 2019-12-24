@@ -12,7 +12,7 @@ class LoginPage extends React.Component {
         return (
             <LandingLayout>
                 <h1>MOVIE APP</h1>
-                <p>Connexion de l'utilisateur</p>
+                <p>User Login</p>
                 <LoginForm/>
             </LandingLayout>
         );

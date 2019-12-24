@@ -12,7 +12,7 @@ class RegisterPage extends React.Component {
         return (
             <LandingLayout>
                 <h1>MOVIE APP</h1>
-                <p>Inscription d'un nouvel utilisateur</p>
+                <p>User Registration</p>
                 <RegisterForm/>
             </LandingLayout>
         );

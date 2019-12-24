@@ -18,7 +18,7 @@ class AddMoviePage extends React.Component {
         console.log("render")
         return (
             <CustomLayout tab={"add"}>
-                <h1 style={{fontSize: 28 }}>Ajouter un film</h1>
+                <h1 style={{fontSize: 28 }}>Add a movie</h1>
                 <hr style={{marginBottom: 25 }}/>
                 <MovieFormAntd/>
             </CustomLayout>

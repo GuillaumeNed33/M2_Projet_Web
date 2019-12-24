@@ -29,7 +29,6 @@ class MovieCard extends React.Component {
     }
     
     detailsFromOMDB = () => {
-        console.log("details OMDB")
         const token = getAuthToken();
         axios.get(process.env.API_URL + '/explorer/imdbID/' + this.props.movie.imdbId,
             { headers: {"Authorization" : token} })
@@ -53,7 +52,7 @@ class MovieCard extends React.Component {
             })
             .catch(error => {
                 console.log(error);
-                message.success('An error occured');
+                message.success('An error occurred');
             });
     }
     
@@ -63,19 +62,19 @@ class MovieCard extends React.Component {
         const poster = (movie.poster && movie.poster !== "N/A") ? movie.poster : "https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Forbidden_Symbol_Transparent.svg/400px-Forbidden_Symbol_Transparent.svg.png"
         const actions = !this.props.inExplorer ? (
             [
-                <Tooltip placement="bottom" title={"Voir en détails"}>
+                <Tooltip placement="bottom" title={"See details"}>
                     <Icon type="eye" key="view" />
                 </Tooltip>,
-                <Tooltip placement="bottom" title={"Modifier le film"}>
+                <Tooltip placement="bottom" title={"Edit movie"}>
                     <Icon type="edit" key="edit" />
                 </Tooltip>,
-                <Tooltip placement="bottom" title={"Supprimer le film de votre liste"}>
+                <Tooltip placement="bottom" title={"Delete the movie from your list"}>
                     <Popconfirm
                         placement="bottomRight"
-                        title={"Êtes-vous sur de vouloir supprimer ce film de votre liste ?"}
+                        title={"Are you sure you want to delete this movie from your list?"}
                         onConfirm={this.confirmDelete}
-                        okText="Supprimer"
-                        cancelText="Annuler"
+                        okText="Delete"
+                        cancelText="Cancel"
                     >
                         <Icon type="delete" key="delete" />
                     </Popconfirm>
@@ -83,10 +82,10 @@ class MovieCard extends React.Component {
             ]
         ) : (
             [
-                <Tooltip placement="bottom" title={"Voir en détails"}>
+                <Tooltip placement="bottom" title={"See details"}>
                     <Icon type="eye" key="view" onClick={this.detailsFromOMDB}/>
                 </Tooltip>,
-                <Tooltip placement="bottom" title={"Ajouter le film à votre liste"}>
+                <Tooltip placement="bottom" title={"Add the movie to your list"}>
                     <Icon type="plus" key="plus" onClick={this.addFromOMDB} />,
                 </Tooltip>
             ]

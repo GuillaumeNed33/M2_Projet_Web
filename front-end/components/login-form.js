@@ -55,33 +55,33 @@ class NormalLoginForm extends React.Component {
             <Form onSubmit={this.handleSubmit} className="login-form">
                 <Form.Item>
                     {getFieldDecorator('username', {
-                        rules: [{ required: true, message: 'Entrez votre identifiant!' }],
+                        rules: [{ required: true, message: 'Enter your username!' }],
                     })(
                         <Input
                             prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                            placeholder="Identifiant"
+                            placeholder="Username"
                         />,
                     )}
                 </Form.Item>
                 <Form.Item>
                     {getFieldDecorator('password', {
-                        rules: [{ required: true, message: 'Entrez votre mot de passe!' }],
+                        rules: [{ required: true, message: 'Enter your password!' }],
                     })(
                         <Input
                             prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
                             type="password"
-                            placeholder="Mot de passe"
+                            placeholder="Password"
                         />,
                     )}
                 </Form.Item>
                 <Form.Item>
                     <Button type="primary" htmlType="submit" loading={this.state.loading} className="form-button">
-                        Connexion
+                        Login
                     </Button>
-                    ou <Link href="/register"><a href="#">s'inscrire maintenant!</a></Link>
+                    or <Link href="/register"><a href="#">register now!</a></Link>
                 </Form.Item>
                 {this.state.error &&
-                <Alert message="Mauvais identifiant ou mot de passe" type="error" showIcon/>
+                <Alert message="Invalid credentials" type="error" showIcon/>
                 }
             </Form>
         );

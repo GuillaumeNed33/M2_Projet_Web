@@ -39,7 +39,7 @@ class SearchMovie extends React.Component {
   
   render() {
     return (
-        <Search className="input-search" placeholder="Cherchez vos films par titre !" onSearch={value => this.searchMovies(value)} loading={this.state.loading} enterButton />
+        <Search className="input-search" placeholder="Search your movies by title!" onSearch={value => this.searchMovies(value)} loading={this.state.loading} enterButton />
     );
   }
 }

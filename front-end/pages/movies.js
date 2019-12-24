@@ -15,19 +15,17 @@ class MyMoviesPage extends React.Component {
     }
     
     componentDidMount() {
-        console.log("MOUNT")
         const token = getAuthToken();
         axios.get(process.env.API_URL + '/movies',
             { headers: {"Authorization" : token} })
             .then(async response => {
-                console.log(response)
                 this.setState({
                     movies: response.data
                 })
             })
             .catch(error => {
                 console.log(error);
-                message.error("Une erreur s'est produite pendant le chargement de votre liste de film.")
+                message.error("An error occurred while loading your movie list.")
             })
     }
     
@@ -35,7 +33,7 @@ class MyMoviesPage extends React.Component {
         const {movies} = this.state;
         return (
             <CustomLayout tab={"movies"}>
-                <h1 style={{fontSize: 28 }}>Ma liste de film</h1>
+                <h1 style={{fontSize: 28 }}>My movie list</h1>
                 <hr style={{marginBottom: 25 }}/>
                 {movies.length > 0 ? (
                     <div className="card-grid">
@@ -44,7 +42,7 @@ class MyMoviesPage extends React.Component {
                         ))}
                     </div>
                 ) : (
-                    <p style={{ fontSize: 18 }}>Votre liste de films est vide.</p>
+                    <p style={{ fontSize: 18 }}>Your movie list is empty.</p>
                 )}
                 <style jsx>{`
             .card-grid {

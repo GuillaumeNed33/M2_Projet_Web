@@ -28,9 +28,9 @@ class ExplorerPage extends React.Component {
         const {movies} = this.state
         return (
             <CustomLayout tab={"explore"}>
-                <h1 style={{fontSize: 28 }}>Explorer les films</h1>
+                <h1 style={{fontSize: 28 }}>Explore movies</h1>
                 <hr style={{marginBottom: 25 }}/>
-                <p><i>Cette partie de l'application exploite l'API de <a target="_blank" href="http://www.omdbapi.com/">OMDb !</a></i> Recherchez un film existant pour l'ajouter à votre liste !</p>
+                <p><i>This part of the application exploits the <a target="_blank" href="http://www.omdbapi.com/">OMDb </a> API!</i> Search for an existing movie to add it to your list!</p>
                 <b>Request url : <a href="http://www.omdbapi.com/?apikey=ed0805fe&">http://www.omdbapi.com/?apikey=ed0805fe&</a></b>
                 
                 <br/>
@@ -39,7 +39,7 @@ class ExplorerPage extends React.Component {
                 
                 {this.state.searchStarted &&
                 <div className="card-grid">
-                    <p>{movies.length} résultat(s)</p>
+                    <p>{movies.length} result(s)</p>
                     {movies.map(m => (
                         <MovieCard key={movies.indexOf(m)} movie={m} inExplorer/>
                     ))}

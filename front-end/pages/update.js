@@ -12,7 +12,7 @@ class UpdateMoviePage extends React.Component {
     render() {
         return (
             <CustomLayout tab={"update"}>
-                <h1 style={{fontSize: 28 }}>Modification d'un film</h1>
+                <h1 style={{fontSize: 28 }}>Editing a movie</h1>
                 <hr style={{marginBottom: 25 }}/>
                 <MovieFormAntd/>
             </CustomLayout>
