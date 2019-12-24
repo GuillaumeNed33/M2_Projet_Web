@@ -26,7 +26,6 @@ class SearchMovie extends React.Component {
       axios.get(process.env.API_URL + '/explorer/' + input,
           { headers: {"Authorization" : token} })
           .then(async response => {
-            console.log(response);
             this.changeSearchLoadingState(false)
             this.props.handleSearchResults(response.data)
           })
