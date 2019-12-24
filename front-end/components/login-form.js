@@ -36,10 +36,8 @@ class NormalLoginForm extends React.Component {
                 password: pwd
             })
             .then(async response => {
-                console.log(response);
                 let {user, token} = await response.data
                 user = JSON.stringify(user);
-                console.log(user)
                 await login({user, token})
             })
             .catch(error => {
