@@ -22,12 +22,25 @@ exports.addMovie = (req, res, next) => {
     }).catch(next);
 }
 
-exports.getMovieFromExplorer = (req, res) => {
+exports.updateMovie = (req, res, next) => {
+    Movie.findByIdAndUpdate({_id: req.params.id}, req.body).then(function(){
+        Movie.findOne({_id: req.params.id}).then(function(movie){
+            res.send(movie);
+        });
+    }).catch(next);
+}
+
+exports.removeMovie = (req, res, next) => {
+    Movie.findByIdAndRemove({_id: req.params.id}).then(function(movie){
+        res.send(movie);
+    }).catch(next);
+}
+
+exports.getMoviesFromExplorer = (req, res) => {
     const inputSearch = req.params.searchInput;
     if(inputSearch) {
         axios.get(process.env.OMDB_API_URL + "s=" + inputSearch)
-            .then(async response => {
-                console.log(response);
+            .then(response => {
                 const movies = [];
                 response.data["Search"].forEach(element => {
                     const movie = {
@@ -50,11 +63,11 @@ exports.getMovieFromExplorer = (req, res) => {
     }
 }
 
-exports.getMovieDetails = (req, res) => {
+exports.getMovieDetails = async (req, res) => {
     const imdbID = req.params.imdbID;
     if(imdbID) {
         try {
-            const movie = getMovieDetailsObject(imdbID);
+            const movie = await getMovieDetailsObject(imdbID);
             res.send(movie)
         } catch (e) {
             res.status(400).send("Error during process")
@@ -65,16 +78,16 @@ exports.getMovieDetails = (req, res) => {
     }
 }
 
-exports.addMovieFromExplorer = (req, res) => {
+exports.addMovieFromExplorer = async (req, res) => {
     const imdbID = req.body.imdbID;
     if(imdbID) {
         try {
-            const movie = getMovieDetailsObject(imdbID);
-            addMovieToDB(movie).then(async function(m){
-                await addMovieToUserList(req.user, m);
-                res.status(201).send(m);
-            }).catch(next);
+            const movie = await getMovieDetailsObject(imdbID);
+            const m = await addMovieToDB(movie)
+            await addMovieToUserList(req.user, m);
+            res.status(201).send(m);
         } catch (e) {
+            console.log(e)
             res.status(400).send("Error during process")
         }
     }
@@ -83,21 +96,7 @@ exports.addMovieFromExplorer = (req, res) => {
     }
 }
 
-exports.updateMovie = (req, res, next) => {
-    Movie.findByIdAndUpdate({_id: req.params.id}, req.body).then(function(){
-        Movie.findOne({_id: req.params.id}).then(function(movie){
-            res.send(movie);
-        });
-    }).catch(next);
-}
-
-exports.removeMovie = (req, res, next) => {
-    Movie.findByIdAndRemove({_id: req.params.id}).then(function(movie){
-        res.send(movie);
-    }).catch(next);
-}
-
-addMovieToUserList = async (user, movie) => {
+addMovieToUserList = (user, movie) => {
     User.findOne({_id: user._id}).then(async user => {
         user.movies.push(movie);
         await user.save();
@@ -107,13 +106,13 @@ addMovieToUserList = async (user, movie) => {
 };
 
 getMovieDetailsObject = (imdbID) => {
-    axios.get(process.env.OMDB_API_URL + "i=" + imdbID)
-        .then(async response => {
-            console.log(response);
+    return axios.get(process.env.OMDB_API_URL + "i=" + imdbID)
+        .then(response => {
             const movieResponse = response.data;
             const releaseDate = formatDate(new Date(movieResponse.Released))
-            const directors = movieResponse.Director.split[","].forEach(element => { element = element.trim()})
-            const genres = movieResponse.Genre.split[","].forEach(element => { element = element.trim()})
+            const directors = movieResponse.Director.split(",").map(s => s.trim())
+            const genres = movieResponse.Genre.split(",").map(s => s.trim())
+            const runtime = movieResponse.Runtime.split(" min")[0].trim()
             return {
                 title: movieResponse.Title,
                 release_date: releaseDate,
@@ -121,7 +120,7 @@ getMovieDetailsObject = (imdbID) => {
                 plot: movieResponse.Plot,
                 poster: movieResponse.Poster,
                 genres: genres,
-                runtime: movieResponse.Runtime.split(" min")[0],
+                runtime: runtime,
             }
         })
         .catch(error => {
