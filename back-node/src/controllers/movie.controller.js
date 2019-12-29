@@ -42,15 +42,17 @@ exports.getMoviesFromExplorer = (req, res) => {
         axios.get(process.env.OMDB_API_URL + "s=" + inputSearch)
             .then(response => {
                 const movies = [];
-                response.data["Search"].forEach(element => {
-                    const movie = {
-                        imdbId: element.imdbID,
-                        title: element.Title,
-                        year: element.Year,
-                        poster: element.Poster,
-                    }
-                    movies.push(movie);
-                })
+                if(response.data["Response"] === "True") {
+                    response.data["Search"].forEach(element => {
+                        const movie = {
+                            imdbId: element.imdbID,
+                            title: element.Title,
+                            year: element.Year,
+                            poster: element.Poster,
+                        }
+                        movies.push(movie);
+                    })
+                }
                 res.send(movies)
             })
             .catch(error => {
