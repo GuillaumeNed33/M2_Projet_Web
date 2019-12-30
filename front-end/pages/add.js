@@ -7,15 +7,9 @@ class AddMoviePage extends React.Component {
     
     constructor(props) {
         super(props)
-        console.log("constructor")
-    }
-    
-    componentDidMount() {
-        console.log("mount")
     }
     
     render() {
-        console.log("render")
         return (
             <CustomLayout tab={"add"}>
                 <h1 style={{fontSize: 28 }}>Add a movie</h1>
