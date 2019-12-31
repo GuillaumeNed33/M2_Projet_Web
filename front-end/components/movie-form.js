@@ -1,18 +1,12 @@
 import React from 'react'
-import {
-    Form,
-    Select,
-    InputNumber,
-    Button,
-    Upload,
-    Icon,
-    Modal,
-    Input,
-    DatePicker,
-} from 'antd';
-import {getBase64} from "../utils/img";
+import Router from 'next/router'
+import axios from 'axios'
+import moment from 'moment';
+import PropTypes from 'prop-types'
+import { getBase64 } from "../utils/img";
+import { getAuthToken } from '../utils/auth'
 
-const Option = Select.Option;
+import { Form, Select, InputNumber, Button, Upload, Icon, Modal, Input, DatePicker, message } from 'antd';
 const TextArea = Input.TextArea;
 
 class MovieForm extends React.Component {
@@ -22,33 +16,107 @@ class MovieForm extends React.Component {
         this.state = {
             previewVisible: false,
             previewImage: '',
-            fileList: []
+            fileList: [],
+            loading: false
         }
+        this.handleSubmit = this.handleSubmit.bind(this)
+        this.handleUploadCancel = this.handleUploadCancel.bind(this)
+        this.handleUploadPreview = this.handleUploadPreview.bind(this)
+        this.handleUploadChange = this.handleUploadChange.bind(this)
     }
     
-    handleSubmit = e => {
+    addMovieRequest = (values) => {
+        const token = getAuthToken();
+        const movie = {
+            title: values.title,
+            release_date: values.release_date,
+            directors: values.directors,
+            plot: values.plot,
+            poster: "",
+            genres: values.genres,
+            runtime: values.runtime,
+        }
+        axios.post(
+            process.env.API_URL + '/movie',
+            movie,
+            { headers: {"Authorization" : token} }
+        )
+            .then(async response => {
+                console.log(response)
+                message.success('Successfully added to your movie list.')
+                    .then(() =>
+                        Router.push("/movies")
+                    )
+            })
+            .catch(error => {
+                console.log(error);
+                message.success('An error occurred!');
+            });
+    }
+    
+    updateMovieRequest = (values) => {
+        const token = getAuthToken();
+        const movie = {
+            title: values.title,
+            release_date: values.release_date,
+            directors: values.directors,
+            plot: values.plot,
+            poster: "",
+            genres: values.genres,
+            runtime: values.runtime,
+        }
+        axios.put(
+            process.env.API_URL + '/movie/' + this.props.movie.id,
+            movie,
+            { headers: {"Authorization" : token} }
+        )
+            .then(async response => {
+                console.log(response)
+                message.success('Successfully edited!')
+                    .then(() =>
+                        Router.push("/movies")
+                    )
+            })
+            .catch(error => {
+                console.log(error);
+                message.success('An error occurred!');
+            });
+    }
+    
+    changeLoadingState = (enable) => {
+        this.setState({loading: enable})
+    }
+    
+    handleSubmit = async e => {
         e.preventDefault();
-        this.props.form.validateFields((err, values) => {
+        this.changeLoadingState(true);
+        await this.props.form.validateFields(async (err, values) => {
+            console.log(values)
             if (!err) {
-                console.log('Received values of form: ', values);
+                if (this.props.movie === null) {
+                    await this.addMovieRequest(values)
+                } else {
+                    await this.updateMovieRequest(values)
+                }
             }
+            this.changeLoadingState(false);
         });
     };
-
-    handleCancel = () => this.setState({ previewVisible: false });
-
-    handlePreview = async file => {
+    
+    handleUploadCancel = () => this.setState({ previewVisible: false });
+    
+    handleUploadPreview = async file => {
         if (!file.url && !file.preview) {
             file.preview = await getBase64(file.originFileObj);
         }
-
+        
         this.setState({
             previewImage: file.url || file.preview,
             previewVisible: true,
         });
     };
-
-    handleChange = ({ fileList }) => this.setState({ fileList });
+    
+    handleUploadChange = ({ fileList }) => this.setState({ fileList });
     
     render() {
         const { getFieldDecorator } = this.props.form;
@@ -63,25 +131,64 @@ class MovieForm extends React.Component {
                 <div className="ant-upload-text">Upload</div>
             </div>
         );
+        const defaultValues = {
+            title: (this.props.movie !== null) ? this.props.movie.title : "",
+            release_date: (this.props.movie !== null) ? moment(this.props.movie.release_date, 'YYYY/MM/DD') : "",
+            directors: (this.props.movie !== null) ? this.props.movie.directors : [],
+            genres: (this.props.movie !== null) ? this.props.movie.genres : [],
+            plot: (this.props.movie !== null) ? this.props.movie.plot : "",
+            runtime: (this.props.movie !== null) ? this.props.movie.runtime : 60,
+            poster: (this.props.movie !== null) ? this.props.movie.poster : "",
+        }
         return (
             <Form {...formItemLayout} onSubmit={this.handleSubmit}>
-                <Form.Item label="Title">
-                    <Input />
+                <Form.Item label="Title" hasFeedback>
+                    {getFieldDecorator('title', {
+                        initialValue: defaultValues.title,
+                        rules: [{ required: true, message: 'This field is required' }],
+                    })(
+                        <Input />
+                    )}
                 </Form.Item>
-                <Form.Item label="Release date">
-                    <DatePicker format={'YYYY/MM/DD'} />
+                <Form.Item label="Release date" hasFeedback>
+                    {getFieldDecorator('release_date', {
+                        initialValue: defaultValues.release_date,
+                        rules: [{ required: true, message: 'This field is required' }],
+                    })(
+                        <DatePicker format={'YYYY/MM/DD'} />
+                    )}
                 </Form.Item>
                 <Form.Item label="Directors" hasFeedback>
-                    <span className="ant-form-text">China</span>
+                    {getFieldDecorator('directors', {
+                        initialValue: defaultValues.directors,
+                        rules: [{ required: true, message: 'This field is required' }],
+                    })(
+                        <Select mode="tags" style={{ width: '100%' }} />
+                    )}
                 </Form.Item>
                 <Form.Item label="Genres" hasFeedback>
-                    <span className="ant-form-text">China</span>
+                    {getFieldDecorator('genres', {
+                        initialValue: defaultValues.genres,
+                        rules: [{ required: true, message: 'This field is required' }],
+                    })(
+                        <Select mode="tags" style={{ width: '100%' }} />
+                    )}
                 </Form.Item>
                 <Form.Item label="Plot" hasFeedback>
-                    <TextArea rows={4} />
+                    {getFieldDecorator('plot', {
+                        initialValue: defaultValues.plot,
+                        rules: [{ required: true, message: 'This field is required' }],
+                    })(
+                        <TextArea rows={4} />
+                    )}
                 </Form.Item>
                 <Form.Item label="Runtime (in minutes)" hasFeedback>
-                    <InputNumber min={1} defaultValue={60} />
+                    {getFieldDecorator('runtime', {
+                        initialValue: defaultValues.runtime,
+                        rules: [{ required: true, message: 'This field is required' }],
+                    })(
+                        <InputNumber min={1} />
+                    )}
                 </Form.Item>
                 <Form.Item label="Poster" hasFeedback>
                     <div className="clearfix">
@@ -89,18 +196,18 @@ class MovieForm extends React.Component {
                             action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
                             listType="picture-card"
                             fileList={fileList}
-                            onPreview={this.handlePreview}
-                            onChange={this.handleChange}
+                            onPreview={this.handleUploadPreview}
+                            onChange={this.handleUploadChange}
                         >
                             {fileList.length > 0 ? null : uploadButton}
                         </Upload>
-                        <Modal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
+                        <Modal visible={previewVisible} footer={null} onCancel={this.handleUploadCancel}>
                             <img alt="poster upload preview" style={{ width: '100%' }} src={previewImage} />
                         </Modal>
                     </div>
                 </Form.Item>
                 <Form.Item wrapperCol={{ span: 12, offset: 6 }}>
-                    <Button type="primary" htmlType="submit">
+                    <Button type="primary" htmlType="submit" loading={this.state.loading}>
                         Submit
                     </Button>
                 </Form.Item>
@@ -111,4 +218,10 @@ class MovieForm extends React.Component {
 
 const MovieFormAntd = Form.create({ name: 'validate_other' })(MovieForm);
 
+MovieForm.propTypes = {
+    movie: PropTypes.object
+}
+MovieForm.defaultProps = {
+    movie: null
+}
 export default MovieFormAntd
