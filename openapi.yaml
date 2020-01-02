@@ -212,7 +212,7 @@ paths:
   '/explorer/{searchInput}':
     get:
       description: Get movies from OMDB API
-      operationId: getFromOMDB
+      operationId: getMoviesFromExplorer
       parameters:
         - name: searchInput
           in: path
@@ -233,7 +233,57 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Movie'
+                  $ref: '#/components/schemas/MovieOMDB'
+      security:
+        - basicAuth: []
+  '/explorer/imdbID/{imdbID}':
+    get:
+      description: Get movie details from OMDB API
+      operationId: getMovieDetails
+      parameters:
+        - name: imdbID
+          in: path
+          description: imdb ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '422':
+          description: OMDB API error
+          content: {}
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '200':
+          description: OMDB's movie matching with the id parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movie'
+      security:
+        - basicAuth: []
+  '/explorer/imdbID':
+    post:
+      description: Import a movie from OMDB to database
+      operationId: addMovieFromExplorer
+      requestBody:
+        description: Movie infos required to be saved in database
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Movie'
+        required: true
+      responses:
+        '422':
+          description: OMDB API error
+          content: {}
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '200':
+          description: movie imported
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movie'
       security:
         - basicAuth: []
 components:
@@ -255,6 +305,18 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Movie'
+    MovieOMDB:
+      type: object
+      properties:
+        imdbId:
+          type: string
+        title:
+          type: string
+        year:
+          type: string
+        poster:
+          type: string
+          description: poster url
     Movie:
       type: object
       properties:
