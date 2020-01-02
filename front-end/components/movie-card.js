@@ -8,7 +8,10 @@ class MovieCard extends React.Component {
     
     constructor(props) {
         super(props)
-        this.state = {}
+        this.state = {
+            addClicked: false
+        }
+        this.clickAddButton = this.clickAddButton.bind(this)
     }
     
     cropLongText = text => {
@@ -21,6 +24,13 @@ class MovieCard extends React.Component {
         } else {
             return text;
         }
+    }
+    
+    clickAddButton = async () => {
+        await this.setState({
+            addClicked: true
+        })
+        this.props.handleAddClick(this.props.movie)
     }
     
     render() {
@@ -54,11 +64,14 @@ class MovieCard extends React.Component {
                     <Icon type="eye" key="view" onClick={() => this.props.handleViewClick(movie)}/>
                 </Tooltip>,
                 <Tooltip placement="bottom" title={"Add the movie to your list"}>
-                    <Icon type="plus" key="plus" onClick={() => this.props.handleAddClick(movie)} />,
+                    {!this.state.addClicked ? (
+                        <Icon type="plus" key="plus" onClick={this.clickAddButton} />
+                    ) : (
+                        <Icon type="check-circle" key="check"/>
+                    )}
                 </Tooltip>
             ]
         )
-        //TODO: change add icon after adding it
         return (
             <Card
                 className="movie-card"
