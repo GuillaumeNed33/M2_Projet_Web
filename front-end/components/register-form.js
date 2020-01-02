@@ -54,11 +54,10 @@ class RegistrationForm extends React.Component {
           await login({user, token})
         })
         .catch(error => {
-          console.error(error);
           this.setState({
             loading: false,
             error: true,
-            errorMsg: error.message
+            errorMsg: error.response.data
           })
         });
   }

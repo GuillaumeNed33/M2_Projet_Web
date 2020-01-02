@@ -10,18 +10,24 @@ exports.register = async (req, res, next) => {
       password: req.body.password,
     });
     user.password = await bcrypt.hash(user.password, 10);
-    await user.save();
-    
-    const token = user.generateAuthToken();
-    res.header("Authorizarion", token).status(201).send({
-      user: {
-        _id: user._id,
-        first_name: user.first_name,
-        last_name: user.last_name,
-        username: user.username,
-      },
-      token: token
-    });
+  
+    const userExist = await User.findOne({username: req.body.username})
+    if(userExist) {
+      res.status(400).send("Username already taken.")
+    }
+    else {
+      await user.save();
+      const token = user.generateAuthToken();
+      res.header("Authorizarion", token).status(201).send({
+        user: {
+          _id: user._id,
+          first_name: user.first_name,
+          last_name: user.last_name,
+          username: user.username,
+        },
+        token: token
+      });
+    }
   } catch (e) {
     res.status(400).send(e.errmsg)
   }
