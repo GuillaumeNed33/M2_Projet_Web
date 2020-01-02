@@ -11,7 +11,7 @@ class RegisterPage extends React.Component {
     render() {
         return (
             <LandingLayout>
-                <h1>MOVIE APP</h1>
+                <h1><img src="/logo_black.png" alt="logo app"/></h1>
                 <p>User Registration</p>
                 <RegisterForm/>
             </LandingLayout>

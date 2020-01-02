@@ -11,10 +11,22 @@ class MovieCard extends React.Component {
         this.state = {}
     }
     
+    cropLongText = text => {
+        const MAX_LENGTH = 100
+        if(text.length >= MAX_LENGTH) {
+            let cropText = text.substring(0, MAX_LENGTH);
+            const last = cropText.lastIndexOf(" ");
+            cropText = cropText.substring(0, last);
+            return cropText + "...";
+        } else {
+            return text;
+        }
+    }
+    
     render() {
-        //TODO : uniformize style
         const {movie} = this.props;
-        const description = !this.props.inExplorer ? movie.plot : movie.year
+        const descriptionText = !this.props.inExplorer ? movie.plot : movie.year
+        const description = this.cropLongText(descriptionText)
         const poster = (movie.poster && movie.poster !== "N/A") ? movie.poster : "https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Forbidden_Symbol_Transparent.svg/400px-Forbidden_Symbol_Transparent.svg.png"
         const actions = !this.props.inExplorer ? (
             [
@@ -49,7 +61,7 @@ class MovieCard extends React.Component {
         return (
             <Card
                 className="movie-card"
-                style={{ width: 300 }}
+                style={{ width: 300, margin: 20}}
                 cover={
                     <img
                         alt={movie.title + " poster"}

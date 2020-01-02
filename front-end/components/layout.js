@@ -9,15 +9,15 @@ const Sider = Layout.Sider
 
 import "../assets/layout.less"
 
-//TODO: add logo
-//TODO: update footer for overlay
 const CustomLayout = props => (
     <Layout id="app-layout">
       <Sider
           breakpoint="lg"
           collapsedWidth="0"
       >
-        <div className="logo" />
+        <div className="logo">
+          <img src="/logo.png" alt="logo app"/>
+        </div>
         <Menu theme="dark" mode="inline" defaultSelectedKeys={[props.tab]}>
           <Menu.Item key="movies">
             <Link href="/movies">
@@ -55,7 +55,7 @@ const CustomLayout = props => (
       </Sider>
       <Layout>
         <Header style={{ background: '#fff', padding: 0 }} />
-        <Content style={{ margin: '24px 16px 0' }}>
+        <Content style={{ margin: '24px 16px 0', minHeight: 'auto' }}>
           <div style={{ padding: 24, background: '#fff', minHeight: "98%" }}>
             {props.children}
           </div>

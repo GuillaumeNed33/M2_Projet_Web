@@ -127,6 +127,7 @@ class MovieForm extends React.Component {
                 <div className="ant-upload-text">Upload</div>
             </div>
         );
+        const hasPoster = (this.props.movie !== null && this.props.movie.poster && this.props.movie.poster !== "N/A")
         const defaultValues = {
             title: (this.props.movie !== null) ? this.props.movie.title : "",
             release_date: (this.props.movie !== null) ? moment(this.props.movie.release_date, 'YYYY/MM/DD') : "",
@@ -134,7 +135,7 @@ class MovieForm extends React.Component {
             genres: (this.props.movie !== null) ? this.props.movie.genres : [],
             plot: (this.props.movie !== null) ? this.props.movie.plot : "",
             runtime: (this.props.movie !== null) ? this.props.movie.runtime : 60,
-            poster: (this.props.movie !== null) ? this.props.movie.poster : "",
+            poster: (this.props.movie !== null && hasPoster) ? this.props.movie.poster : "",
         }
         return (
             <Form {...formItemLayout} onSubmit={this.handleSubmit}>
@@ -202,6 +203,11 @@ class MovieForm extends React.Component {
                         </Modal>
                     </div>
                 </Form.Item>
+                {defaultValues.poster !== "" &&
+                    <Form.Item label="Current poster">
+                        <img src={defaultValues.poster} alt="current poster" style={{maxHeight: 200}}/>
+                    </Form.Item>
+                }
                 <Form.Item wrapperCol={{ span: 12, offset: 6 }}>
                     <Button type="primary" htmlType="submit" loading={this.state.loading}>
                         Submit
@@ -209,7 +215,6 @@ class MovieForm extends React.Component {
                 </Form.Item>
             </Form>
         );
-        // TODO : display current poster
     }
 }
 
