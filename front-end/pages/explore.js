@@ -1,8 +1,10 @@
 import React from 'react'
-import {withAuthSync} from "../utils/auth"
+import axios from 'axios'
+import { getAuthToken, withAuthSync } from "../utils/auth"
 import CustomLayout from "../components/layout"
 import MovieCard from '../components/movie-card'
 import SearchMovie from '../components/search-movie'
+import { message } from 'antd'
 
 class ExplorerPage extends React.Component {
     
@@ -14,14 +16,44 @@ class ExplorerPage extends React.Component {
             error: false
         }
         this.handleSearchResults = this.handleSearchResults.bind(this);
+        this.handleViewMovieClick = this.handleViewMovieClick.bind(this);
+        this.handleAddMovieClick = this.handleAddMovieClick.bind(this);
     }
     
     handleSearchResults = (movies, error= false) => {
         this.setState({
-            movies: movies,
+            movies: [...movies],
             searchStarted: true,
             error: error
         })
+    }
+    
+    handleViewMovieClick = (movie) => {
+        const token = getAuthToken();
+        axios.get(process.env.API_URL + '/explorer/imdbID/' + movie.imdbId,
+            { headers: {"Authorization" : token} })
+            .then(async response => {
+                //TODO: Display Infos
+                console.log(response)
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    }
+    handleAddMovieClick = (movie) => {
+        const token = getAuthToken();
+        const imdbID =  movie.imdbId;
+        axios.post(process.env.API_URL + '/explorer/imdbID',
+            { imdbID:  imdbID },
+            { headers: {"Authorization" : token} })
+            .then(async response => {
+                console.log(response)
+                message.success('Successfully added to your movie list.');
+            })
+            .catch(error => {
+                console.log(error);
+                message.success('An error occurred.');
+            });
     }
     
     render() {
@@ -41,7 +73,13 @@ class ExplorerPage extends React.Component {
                 <div className="card-grid">
                     <p>{movies.length} result(s)</p>
                     {movies.map(m => (
-                        <MovieCard key={movies.indexOf(m)} movie={m} inExplorer/>
+                        <MovieCard
+                            key={movies.indexOf(m)}
+                            movie={m}
+                            inExplorer
+                            handleViewClick={this.handleViewMovieClick}
+                            handleAddClick={this.handleAddMovieClick}
+                        />
                     ))}
                 </div>
                 }

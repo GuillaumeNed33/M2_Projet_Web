@@ -44,9 +44,7 @@ class MovieForm extends React.Component {
             .then(async response => {
                 console.log(response)
                 message.success('Successfully added to your movie list.')
-                    .then(() =>
-                        Router.push("/movies")
-                    )
+                Router.push("/movies")
             })
             .catch(error => {
                 console.log(error);
@@ -73,9 +71,7 @@ class MovieForm extends React.Component {
             .then(async response => {
                 console.log(response)
                 message.success('Successfully edited!')
-                    .then(() =>
-                        Router.push("/movies")
-                    )
+                Router.push("/movies")
             })
             .catch(error => {
                 console.log(error);
@@ -155,7 +151,7 @@ class MovieForm extends React.Component {
                         initialValue: defaultValues.release_date,
                         rules: [{ required: true, message: 'This field is required' }],
                     })(
-                        <DatePicker format={'YYYY/MM/DD'} />
+                        <DatePicker format={'YYYY/MM/DD'} placeholder={"format : YYY/MM/DD"}/>
                     )}
                 </Form.Item>
                 <Form.Item label="Directors" hasFeedback>
