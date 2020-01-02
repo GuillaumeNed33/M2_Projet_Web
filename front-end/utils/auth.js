@@ -4,8 +4,9 @@ import nextCookie from 'next-cookies'
 import cookie from 'js-cookie'
 
 export const login = ({ user, token }) => {
-    cookie.set('token', token, { expires: 1 })
-    cookie.set('user', user, { expires: 1 })
+    const expiryTime = new Date(new Date().getTime() + 60 * 60 * 1000);
+    cookie.set('token', token, { expires: expiryTime })
+    cookie.set('user', user, { expires: expiryTime })
     Router.push('/movies')
 }
 
