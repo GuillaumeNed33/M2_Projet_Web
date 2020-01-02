@@ -41,7 +41,7 @@ class NormalLoginForm extends React.Component {
                 await login({user, token})
             })
             .catch(error => {
-                console.log(error);
+                console.error(error);
                 this.setState({
                     loading: false,
                     error: true

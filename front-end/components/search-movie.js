@@ -30,7 +30,7 @@ class SearchMovie extends React.Component {
             this.props.handleSearchResults(response.data)
           })
           .catch(error => {
-            console.log(error);
+            console.error(error);
             this.changeSearchLoadingState(false)
             this.props.handleSearchResults([], true)
           });

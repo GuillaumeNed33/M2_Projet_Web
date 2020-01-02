@@ -42,13 +42,12 @@ class MovieForm extends React.Component {
             { headers: {"Authorization" : token} }
         )
             .then(async response => {
-                console.log(response)
                 message.success('Successfully added to your movie list.')
                 Router.push("/movies")
             })
             .catch(error => {
-                console.log(error);
-                message.success('An error occurred!');
+                console.error(error);
+                message.error('An error occurred!');
             });
     }
     
@@ -64,18 +63,17 @@ class MovieForm extends React.Component {
             runtime: values.runtime,
         }
         axios.put(
-            process.env.API_URL + '/movie/' + this.props.movie.id,
+            process.env.API_URL + '/movie/' + this.props.movie._id,
             movie,
             { headers: {"Authorization" : token} }
         )
             .then(async response => {
-                console.log(response)
                 message.success('Successfully edited!')
-                Router.push("/movies")
+                this.props.handleMovieEdit(response.data)
             })
             .catch(error => {
-                console.log(error);
-                message.success('An error occurred!');
+                console.error(error);
+                message.error('An error occurred!');
             });
     }
     
@@ -87,7 +85,6 @@ class MovieForm extends React.Component {
         e.preventDefault();
         this.changeLoadingState(true);
         await this.props.form.validateFields(async (err, values) => {
-            console.log(values)
             if (!err) {
                 if (this.props.movie === null) {
                     await this.addMovieRequest(values)
@@ -221,9 +218,11 @@ class MovieForm extends React.Component {
 const MovieFormAntd = Form.create({ name: 'validate_other' })(MovieForm);
 
 MovieForm.propTypes = {
-    movie: PropTypes.object
+    movie: PropTypes.object,
+    handleMovieEdit: PropTypes.func
 }
 MovieForm.defaultProps = {
-    movie: null
+    movie: null,
+    handleMovieEdit: () => {console.log("default handleMovieEdit function")}
 }
 export default MovieFormAntd

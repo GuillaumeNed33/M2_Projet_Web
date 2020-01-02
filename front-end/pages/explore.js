@@ -4,7 +4,8 @@ import { getAuthToken, withAuthSync } from "../utils/auth"
 import CustomLayout from "../components/layout"
 import MovieCard from '../components/movie-card'
 import SearchMovie from '../components/search-movie'
-import { message } from 'antd'
+import MovieDetails from '../components/movie-details'
+import { Drawer, message } from 'antd'
 
 class ExplorerPage extends React.Component {
     
@@ -13,17 +14,22 @@ class ExplorerPage extends React.Component {
         this.state = {
             movies: [],
             searchStarted: false,
-            error: false
+            error: false,
+            drawerViewVisible: false,
+            selectedMovie: null,
         }
         this.handleSearchResults = this.handleSearchResults.bind(this);
         this.handleViewMovieClick = this.handleViewMovieClick.bind(this);
         this.handleAddMovieClick = this.handleAddMovieClick.bind(this);
+        this.closeDrawer = this.closeDrawer.bind(this);
     }
     
     handleSearchResults = (movies, error= false) => {
         this.setState({
             movies: [...movies],
             searchStarted: true,
+            selectedMovie: null,
+            drawerViewVisible: false,
             error: error
         })
     }
@@ -33,11 +39,15 @@ class ExplorerPage extends React.Component {
         axios.get(process.env.API_URL + '/explorer/imdbID/' + movie.imdbId,
             { headers: {"Authorization" : token} })
             .then(async response => {
-                //TODO: Display Infos
-                console.log(response)
+                const movie = {...response.data}
+                this.setState({
+                    selectedMovie: movie,
+                    drawerViewVisible: true,
+                })
             })
             .catch(error => {
-                console.log(error);
+                console.error(error);
+                message.error('An error occurred.');
             });
     }
     
@@ -48,17 +58,22 @@ class ExplorerPage extends React.Component {
             { imdbID:  imdbID },
             { headers: {"Authorization" : token} })
             .then(async response => {
-                console.log(response)
                 message.success('Successfully added to your movie list.');
             })
             .catch(error => {
-                console.log(error);
-                message.success('An error occurred.');
+                console.error(error);
+                message.error('An error occurred.');
             });
     }
     
+    closeDrawer = () => {
+        this.setState({
+            selectedMovie: null,
+            drawerViewVisible: false,
+        });
+    }
+    
     render() {
-        //TODO : create drawer to disaply infos
         const {movies} = this.state
         return (
             <CustomLayout tab={"explore"}>
@@ -72,17 +87,28 @@ class ExplorerPage extends React.Component {
                 <br/>
                 
                 {this.state.searchStarted &&
-                <div className="card-grid">
+                <div>
                     <p>{movies.length} result(s)</p>
-                    {movies.map(m => (
-                        <MovieCard
-                            key={movies.indexOf(m)}
-                            movie={m}
-                            inExplorer
-                            handleViewClick={this.handleViewMovieClick}
-                            handleAddClick={this.handleAddMovieClick}
-                        />
-                    ))}
+                    <div className="card-grid">
+                        {movies.map(m => (
+                            <MovieCard
+                                key={movies.indexOf(m)}
+                                movie={m}
+                                inExplorer
+                                handleViewClick={this.handleViewMovieClick}
+                                handleAddClick={this.handleAddMovieClick}
+                            />
+                        ))}
+                    </div>
+                    <Drawer
+                        title="Movie details"
+                        width={720}
+                        onClose={this.closeDrawer}
+                        visible={this.state.drawerViewVisible}
+                        bodyStyle={{ paddingBottom: 80 }}
+                    >
+                        <MovieDetails movie={this.state.selectedMovie} />
+                    </Drawer>
                 </div>
                 }
             </CustomLayout>

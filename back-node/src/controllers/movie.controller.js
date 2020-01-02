@@ -56,7 +56,7 @@ exports.getMoviesFromExplorer = (req, res) => {
                 res.send(movies)
             })
             .catch(error => {
-                console.log(error);
+                console.error(error);
                 res.send(error)
             });
     }
@@ -89,7 +89,7 @@ exports.addMovieFromExplorer = async (req, res) => {
             await addMovieToUserList(req.user, m);
             res.status(201).send(m);
         } catch (e) {
-            console.log(e)
+            console.error(e)
             res.status(400).send("Error during process")
         }
     }
@@ -126,7 +126,7 @@ getMovieDetailsObject = (imdbID) => {
             }
         })
         .catch(error => {
-            console.log(error);
+            console.error(error);
             return null;
         });
 }

@@ -58,6 +58,7 @@ class MovieCard extends React.Component {
                 </Tooltip>
             ]
         )
+        //TODO: change add icon after adding it
         return (
             <Card
                 className="movie-card"
@@ -74,11 +75,6 @@ class MovieCard extends React.Component {
                     title={movie.title}
                     description={description}
                 />
-                <style jsx>{`
-        .ant-card {
-          margin: 5px 0 5px 5px !important;
-        }
-      `}</style>
             </Card>
         );
     }
