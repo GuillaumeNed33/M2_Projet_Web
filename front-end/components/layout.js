@@ -9,6 +9,8 @@ const Sider = Layout.Sider
 
 import "../assets/layout.less"
 
+//TODO: add logo
+//TODO: update footer for overlay
 const CustomLayout = props => (
     <Layout id="app-layout">
       <Sider
