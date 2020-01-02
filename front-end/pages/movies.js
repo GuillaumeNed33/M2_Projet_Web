@@ -88,6 +88,8 @@ class MyMoviesPage extends React.Component {
     };
     
     render() {
+        //TODO : display infos in drawer
+        //TODO : test edition in drawer
         const {movies} = this.state;
         return (
             <CustomLayout tab={"movies"}>

@@ -209,6 +209,7 @@ class MovieForm extends React.Component {
                 </Form.Item>
             </Form>
         );
+        // TODO : display current poster
     }
 }
 

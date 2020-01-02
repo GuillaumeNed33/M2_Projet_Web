@@ -12,6 +12,7 @@ class MovieCard extends React.Component {
     }
     
     render() {
+        //TODO : uniformize style
         const {movie} = this.props;
         const description = !this.props.inExplorer ? movie.plot : movie.year
         const poster = (movie.poster && movie.poster !== "N/A") ? movie.poster : "https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Forbidden_Symbol_Transparent.svg/400px-Forbidden_Symbol_Transparent.svg.png"

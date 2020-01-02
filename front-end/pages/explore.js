@@ -40,6 +40,7 @@ class ExplorerPage extends React.Component {
                 console.log(error);
             });
     }
+    
     handleAddMovieClick = (movie) => {
         const token = getAuthToken();
         const imdbID =  movie.imdbId;
@@ -57,6 +58,7 @@ class ExplorerPage extends React.Component {
     }
     
     render() {
+        //TODO : create drawer to disaply infos
         const {movies} = this.state
         return (
             <CustomLayout tab={"explore"}>
