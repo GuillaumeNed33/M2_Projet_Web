@@ -99,7 +99,6 @@ exports.addMovieFromExplorer = async (req, res) => {
 }
 
 exports.uploadPoster = async (req, res) => {
-    console.log(req.files)
     res.status(200).send('/' + req.files.poster.name)
 }
 

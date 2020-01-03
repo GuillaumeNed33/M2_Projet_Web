@@ -3,39 +3,60 @@ import Router from 'next/router'
 import axios from 'axios'
 import moment from 'moment';
 import PropTypes from 'prop-types'
-import { getBase64 } from "../utils/img";
 import { getAuthToken } from '../utils/auth'
 
 import { Form, Select, InputNumber, Button, Upload, Icon, Modal, Input, DatePicker, message } from 'antd';
+import { error } from 'next/dist/build/output/log'
 const TextArea = Input.TextArea;
+
+function getBase64(img, callback) {
+    const reader = new FileReader();
+    reader.addEventListener('load', () => callback(reader.result));
+    reader.readAsDataURL(img);
+}
+
+function beforeUpload(file) {
+    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+    if (!isJpgOrPng) {
+        message.error('You can only upload JPG/PNG file!');
+    }
+    const isLt2M = file.size / 1024 / 1024 < 2;
+    if (!isLt2M) {
+        message.error('Image must smaller than 2MB!');
+    }
+    return isJpgOrPng && isLt2M;
+}
 
 class MovieForm extends React.Component {
     
     constructor(props) {
         super(props)
         this.state = {
-            previewVisible: false,
-            previewImage: '',
-            fileList: [],
-            loading: false
+            loading: false,
+            loadingUpload: false,
+            posterUrl : '',
+            posterFile: null
         }
         this.handleSubmit = this.handleSubmit.bind(this)
-        this.handleUploadCancel = this.handleUploadCancel.bind(this)
-        this.handleUploadPreview = this.handleUploadPreview.bind(this)
-        this.handleUploadChange = this.handleUploadChange.bind(this)
+        this.handleUploadSingleChange = this.handleUploadSingleChange.bind(this)
     }
     
-    addMovieRequest = (values) => {
-        const token = getAuthToken();
+    addMovieRequest = async (values) => {
+        let uploadURL = "";
+        if(this.state.posterFile !== null) {
+            uploadURL = await this.uploadPoster();
+            console.log(uploadURL)
+        }
         const movie = {
             title: values.title,
             release_date: values.release_date,
             directors: values.directors,
             plot: values.plot,
-            poster: "",
+            poster: uploadURL,
             genres: values.genres,
             runtime: values.runtime,
         }
+        const token = getAuthToken();
         axios.post(
             process.env.API_URL + '/movie',
             movie,
@@ -51,14 +72,18 @@ class MovieForm extends React.Component {
             });
     }
     
-    updateMovieRequest = (values) => {
+    updateMovieRequest = async (values) => {
+        let uploadURL = this.props.movie.poster;
+        if(this.state.posterFile !== null) {
+            uploadURL = await this.uploadPoster();
+        }
         const token = getAuthToken();
         const movie = {
             title: values.title,
             release_date: values.release_date,
             directors: values.directors,
             plot: values.plot,
-            poster: "",
+            poster: uploadURL,
             genres: values.genres,
             runtime: values.runtime,
         }
@@ -74,6 +99,24 @@ class MovieForm extends React.Component {
             .catch(error => {
                 console.error(error);
                 message.error('An error occurred!');
+            });
+    }
+    
+    uploadPoster = async () => {
+        const data = new FormData();
+        data.append('poster', this.state.posterFile.originFileObj);
+        return await axios.post(process.env.API_URL + '/upload',
+            data, {
+                headers: {
+                    'Content-Type': 'multipart/form-data; boundary=ebf9f03029db4c2799ae16b5428b06bd'
+                }
+            })
+            .then((res) => {
+                return res.data;
+            })
+            .catch(error => {
+                console.error(error)
+                message.error("An error occured during poster upload.")
             });
     }
     
@@ -96,20 +139,21 @@ class MovieForm extends React.Component {
         });
     };
     
-    handleUploadCancel = () => this.setState({ previewVisible: false });
-    
-    handleUploadPreview = async file => {
-        if (!file.url && !file.preview) {
-            file.preview = await getBase64(file.originFileObj);
+    handleUploadSingleChange = async info => {
+        if (info.file.status === "uploading") {
+            this.setState({ loadingUpload: true });
+            return;
         }
-        
-        this.setState({
-            previewImage: file.url || file.preview,
-            previewVisible: true,
-        });
+        if (info.file.status === "done") {
+            getBase64(info.file.originFileObj, posterUrl  =>
+                this.setState({
+                    posterUrl ,
+                    posterFile: {...info.file} ,
+                    loadingUpload: false,
+                }),
+            );
+        }
     };
-    
-    handleUploadChange = ({ fileList }) => this.setState({ fileList });
     
     render() {
         const { getFieldDecorator } = this.props.form;
@@ -117,13 +161,13 @@ class MovieForm extends React.Component {
             labelCol: { span: 6 },
             wrapperCol: { span: 14 },
         };
-        const { previewVisible, previewImage, fileList } = this.state;
         const uploadButton = (
             <div>
-                <Icon type="plus" />
+                <Icon type={this.state.loadingUpload ? 'loading' : 'plus'} />
                 <div className="ant-upload-text">Upload</div>
             </div>
         );
+        const { posterUrl  } = this.state;
         const hasPoster = (this.props.movie !== null && this.props.movie.poster && this.props.movie.poster !== "N/A")
         const defaultValues = {
             title: (this.props.movie !== null) ? this.props.movie.title : "",
@@ -132,7 +176,9 @@ class MovieForm extends React.Component {
             genres: (this.props.movie !== null) ? this.props.movie.genres : [],
             plot: (this.props.movie !== null) ? this.props.movie.plot : "",
             runtime: (this.props.movie !== null) ? this.props.movie.runtime : 60,
-            poster: (this.props.movie !== null && hasPoster) ? this.props.movie.poster : "",
+            poster: (this.props.movie !== null && hasPoster) ? (
+                (this.props.movie.poster.startsWith("http")) ? this.props.movie.poster : process.env.API_URL + this.props.movie.poster
+            ) : "",
         }
         return (
             <Form {...formItemLayout} onSubmit={this.handleSubmit}>
@@ -187,23 +233,22 @@ class MovieForm extends React.Component {
                 <Form.Item label="Poster" hasFeedback>
                     <div className="clearfix">
                         <Upload
-                            action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                            name="poster"
                             listType="picture-card"
-                            fileList={fileList}
-                            onPreview={this.handleUploadPreview}
-                            onChange={this.handleUploadChange}
+                            className="avatar-uploader"
+                            showUploadList={false}
+                            action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                            beforeUpload={beforeUpload}
+                            onChange={this.handleUploadSingleChange}
                         >
-                            {fileList.length > 0 ? null : uploadButton}
+                            {posterUrl  ? <img src={posterUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
                         </Upload>
-                        <Modal visible={previewVisible} footer={null} onCancel={this.handleUploadCancel}>
-                            <img alt="poster upload preview" style={{ width: '100%' }} src={previewImage} />
-                        </Modal>
                     </div>
                 </Form.Item>
                 {defaultValues.poster !== "" &&
-                    <Form.Item label="Current poster">
-                        <img src={defaultValues.poster} alt="current poster" style={{maxHeight: 200}}/>
-                    </Form.Item>
+                <Form.Item label="Current poster">
+                    <img src={defaultValues.poster} alt="current poster" style={{maxHeight: 200}}/>
+                </Form.Item>
                 }
                 <Form.Item wrapperCol={{ span: 12, offset: 6 }}>
                     <Button type="primary" htmlType="submit" loading={this.state.loading}>
