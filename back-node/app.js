@@ -3,16 +3,18 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors')
+const path = require('path');
 
-//get env variables from .env file
+// get env variables from .env file
 dotenv.config();
 
 // set up express app
 const app = express();
 
-
 // connect to mongodb
 mongoose.connect(process.env.DB_URL, { useUnifiedTopology: true, useNewUrlParser: true, useCreateIndex: true });
+
+app.use(express.static(path.join(__dirname, 'uploads')));
 
 // use body-parser middleware
 app.use(bodyParser.json());

@@ -1,6 +1,8 @@
 const express = require('express');
 const auth = require('./auth');
 const router = express.Router();
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
 
 const movieController = require('./controllers/movie.controller');
 const userController = require('./controllers/user.controller');
@@ -18,5 +20,6 @@ router.delete('/movie/:id', auth, movieController.removeMovie);
 router.get('/explorer/:searchInput', auth, movieController.getMoviesFromExplorer);
 router.get('/explorer/imdbID/:imdbID', auth, movieController.getMovieDetails);
 router.post('/explorer/imdbID', auth, movieController.addMovieFromExplorer);
+router.post('/upload', upload, movieController.uploadPoster);
 
 module.exports = router;

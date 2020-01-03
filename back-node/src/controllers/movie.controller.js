@@ -98,6 +98,11 @@ exports.addMovieFromExplorer = async (req, res) => {
     }
 }
 
+exports.uploadPoster = async (req, res) => {
+    console.log(req.files)
+    res.status(200).send('/' + req.files.poster.name)
+}
+
 addMovieToUserList = (user, movie) => {
     User.findOne({_id: user._id}).then(async user => {
         user.movies.push(movie);
