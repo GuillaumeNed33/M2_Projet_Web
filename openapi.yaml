@@ -286,6 +286,30 @@ paths:
                 $ref: '#/components/schemas/Movie'
       security:
         - basicAuth: []
+  '/upload':
+    post:
+      description: Upload a movie poster
+      operationId: uploadPoster
+      requestBody:
+        description: File to upload
+        content:
+          multipart/form-data:
+            schema:
+              type: string
+              format: binary
+        required: true
+      responses:
+        '422':
+          description: Server error
+          content: {}
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '200':
+          description: filename
+          content:
+            text/plain:
+              schema:
+                type: string
 components:
   schemas:
     User:
