@@ -23,13 +23,15 @@ Les ports du front, du back et de la base de données sont modifiables dans le f
 L'application est disponible à l'adresse [localhost:3000](localhost:3000) !
     
 ### Sans Docker
-Lancer le back end à l'adresse [localhost:4000](localhost:4000) :
+On suppose que vous possédez sur votre machine un SGBD MongoDB actif.  
+Dans le fichier `back-node/.env`, commentez la ligne 5 et décommentez la ligne 2.  
+Ensuite, lancez le back end à l'adresse [localhost:4000](localhost:4000) :
 
     $ cd back-node
     $ npm install
     $ npm start 
     
-Lancer le front end à l'adresse [localhost:3000](localhost:3000) :
+Enfin, lancez le front end à l'adresse [localhost:3000](localhost:3000) :
 
     $ cd front-end
     $ npm install
