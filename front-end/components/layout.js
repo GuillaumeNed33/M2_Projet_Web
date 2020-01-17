@@ -9,6 +9,13 @@ const Sider = Layout.Sider
 
 import "../assets/layout.less"
 
+const confirmLogout = () => {
+  const ok = window.confirm("Are you sure you want to sign out?");
+  if(ok) {
+   logout();
+  }
+}
+
 const CustomLayout = props => (
     <Layout id="app-layout">
       <Sider
@@ -43,18 +50,11 @@ const CustomLayout = props => (
               </div>
             </Link>
           </Menu.Item>
-          <Menu.Item key="logout">
+          <Menu.Item key="logout" onClick={confirmLogout}>
             <Link href="#">
               <div>
-                <Popconfirm
-                  placement="bottomRight"
-                  title={"Are you sure you want to sign out?"}
-                  onConfirm={logout}
-                  okText="Sign out"
-                  cancelText="Cancel">
-                  <Icon type="logout" />
-                  <span className="nav-text">Sign out</span>
-                </Popconfirm>
+                <Icon type="logout" />
+                <span className="nav-text">Sign out</span>
               </div>
             </Link>
           </Menu.Item>

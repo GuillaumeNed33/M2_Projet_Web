@@ -14,6 +14,14 @@ class MovieCard extends React.Component {
         this.clickAddButton = this.clickAddButton.bind(this)
     }
     
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (this.props.movie !== prevProps.movie && this.state.addClicked) {
+            this.setState({
+                addClicked: false
+            })
+        }
+    }
+    
     cropLongText = text => {
         const MAX_LENGTH = 65
         if(text.length >= MAX_LENGTH) {
