@@ -9,6 +9,7 @@ services:
   front:
     build:
       context: front-end/.
+    restart: always
     ports:
       - ${FRONT_PORT}:3000
     depends_on:
