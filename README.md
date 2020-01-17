@@ -14,15 +14,37 @@ Ils peuvent ajouter leurs films à la main dans l'application, ou bien exploiter
 
 ## Manuel d'installation
 
+### Configuration par défaut
+
+Par défaut l'application, est configurée pour fonctionner sur heroku.  
+La base de données MongoDB est hebergé sur MongoAtlas. 
+Voici les liens vers l'application et vers l'api :
+
+* Front : [https://movietime-front.herokuapp.com/]()
+* Back  : [https://movietime-back.herokuapp.com/]()
+
 ### Avec Docker
-Executez la commande : 
+
+Pour utiliser la configuration de docker vous devrez effectuez quelques changements :
+* Commentez la **ligne 8** du fichier `back-node/.env`
+* Décommentez la **ligne 5** du fichier `back-node/.env`
+* Commentez la **ligne 2** du fichier `front-end/.env`
+* Décommentez la **ligne 1** du fichier `front-end/.env`
+
+Ensuite, vous pourrez executer la commande : 
     
     $ docker-compose up -d
     
 Les ports du front, du back et de la base de données sont modifiables dans le fichier `.env`.
 L'application est disponible à l'adresse [localhost:3000](localhost:3000) !
     
-### Sans Docker
+### Sans Docker, en local
+Pour utiliser la configuration locale vous devrez effectuez quelques changements :
+* Commentez la **ligne 8** du fichier `back-node/.env`
+* Décommentez la **ligne 2** du fichier `back-node/.env`
+* Commentez la **ligne 2** du fichier `front-end/.env`
+* Décommentez la **ligne 1** du fichier `front-end/.env`
+
 On suppose que vous possédez sur votre machine un SGBD MongoDB actif.  
 Dans le fichier `back-node/.env`, commentez la ligne 5 et décommentez la ligne 2.  
 Ensuite, lancez le back end à l'adresse [localhost:4000](localhost:4000) :
