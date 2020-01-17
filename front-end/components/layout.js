@@ -1,7 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
 import {logout} from '../utils/auth'
-import { Layout, Menu, Icon } from 'antd'
+import { Layout, Menu, Icon, Popconfirm } from 'antd'
 const Header = Layout.Header
 const Content = Layout.Content
 const Footer = Layout.Footer
@@ -43,11 +43,18 @@ const CustomLayout = props => (
               </div>
             </Link>
           </Menu.Item>
-          <Menu.Item key="logout" onClick={logout}>
+          <Menu.Item key="logout">
             <Link href="#">
               <div>
-                <Icon type="logout" />
-                <span className="nav-text">Sign out</span>
+                <Popconfirm
+                  placement="bottomRight"
+                  title={"Are you sure you want to sign out?"}
+                  onConfirm={logout}
+                  okText="Sign out"
+                  cancelText="Cancel">
+                  <Icon type="logout" />
+                  <span className="nav-text">Sign out</span>
+                </Popconfirm>
               </div>
             </Link>
           </Menu.Item>
