@@ -20,12 +20,12 @@ Par défaut l'application, est configurée pour fonctionner sur heroku.
 La base de données MongoDB est hebergé sur MongoAtlas. 
 Voici les liens vers l'application et vers l'api :
 
-* Front : [https://movietime-front.herokuapp.com/]()
-* Back  : [https://movietime-back.herokuapp.com/]()
+* Front : [https://app-movietime-front.herokuapp.com/]()
+* Back  : [https://app-movietime-back.herokuapp.com/]()
 
 ### Avec Docker
 
-Pour utiliser la configuration de docker vous devrez effectuez quelques changements :
+Pour utiliser la configuration de docker vous devrez effectuer quelques changements :
 * Commentez la **ligne 8** du fichier `back-node/.env`
 * Décommentez la **ligne 5** du fichier `back-node/.env`
 * Commentez la **ligne 2** du fichier `front-end/.env`
@@ -39,7 +39,7 @@ Les ports du front, du back et de la base de données sont modifiables dans le f
 L'application est disponible à l'adresse [localhost:3000](localhost:3000) !
     
 ### Sans Docker, en local
-Pour utiliser la configuration locale vous devrez effectuez quelques changements :
+Pour utiliser la configuration locale vous devrez effectuer quelques changements :
 * Commentez la **ligne 8** du fichier `back-node/.env`
 * Décommentez la **ligne 2** du fichier `back-node/.env`
 * Commentez la **ligne 2** du fichier `front-end/.env`
