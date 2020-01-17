@@ -32,8 +32,9 @@ app.use(function(err, req, res, next){
 });
 
 // start server
-app.listen(4000, function(){
-  console.log(`now listening for requests on  http://127.0.0.1:4000`);
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, function(){
+  console.log("now listening for requests on  http://127.0.0.1:" + PORT);
 });
 
 
